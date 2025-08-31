@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-1
+  labels:
+    app-name: pod-1
+    purpose: pod-affinity
+spec:
+  containers:
+  - name: pod-1
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-2
+  labels:
+    app-name: pod-2
+    purpose: pod-anti-affinity
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app-name
+            operator: In
+            values:
+            - pod-1
+        topologyKey: "kubernetes.io/hostname"
+  containers:
+  - name: pod-2
+    image: nginx
+
+
+# Pod 2 has Pod Anti-Affinity rule.
+
+# It will avoid scheduling on the same node as any pod with label app-name=pod-1.
+
+# topologyKey: kubernetes.io/hostname → spreading is done per node.

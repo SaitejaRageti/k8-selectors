@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-selector-demo-1   # Pod name
+  labels:
+    env: test                  # Label for identification
+spec:
+  containers:
+  - name: nginx
+    image: nginx               # Runs the official nginx container
+    imagePullPolicy: Always    # Always pull the latest image
+  nodeSelector:
+    disktype: ssd              # Schedule pod only on nodes labeled with "disktype=ssd"
+  tolerations:
+  - key: "key1"
+    operator: "Equal"
+    value: "value1"
+    effect: "NoExecute"        # Pod can tolerate taints with key1=value1:NoExecute
+  - key: "key1"
+    operator: "Equal"
+    value: "value1"
+    effect: "NoSchedule"       # Pod can tolerate taints with key1=value1:NoSchedule
